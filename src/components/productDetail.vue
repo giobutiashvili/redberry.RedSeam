@@ -56,15 +56,17 @@
               <i class="fas fa-shopping-cart"></i> Add to Cart
             </button>
           </div>
-          <div>
+          <div class="mt-4 d-flex flex-column gap-3">
             <div>
               <p>Details</p>
             </div>
-            <div>
-              <p>Brand:</p>
-            </div>
-            <div>
-              <p>{{ product.description }}</p>
+            <div class="d-flex flex-column gap-2">
+              <div>
+                <p>Brand:</p>
+              </div>
+              <div>
+                <p>{{ product.description }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -137,7 +139,7 @@ button {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 41px;
+  height: 59px;
   background-color: #ff4000;
   color: white;
   padding: 16px 60px;
@@ -146,11 +148,8 @@ button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-size: 18px;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 button:hover {
-  height: 59px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-  transition: scale(1.1);
+  opacity: 0.8;
 }
 </style>

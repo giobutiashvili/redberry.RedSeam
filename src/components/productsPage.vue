@@ -52,5 +52,6 @@ onMounted(async () => {
   overflow: hidden;
   border-radius: 10px;
   object-fit: cover;
+  cursor: pointer;
 }
 </style>
