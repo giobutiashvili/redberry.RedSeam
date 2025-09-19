@@ -1,38 +1,71 @@
 <template>
-  <div class="container">
-    <div class="row m-4" v-if="product">
-      <div>
-        <p>{{ product.available_colors }}</p>
+  <div class="d-flex" v-if="product">
+    <div class="row m-4">
+      <div class="col-2 d-flex flex-column gap-2">
+        <img
+          v-for="(img, i) in product.images"
+          :key="i"
+          :src="img"
+          class="img-thumbnail small-img"
+          @click="MainPhoto = img"
+        />
       </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <img :src="MainPhoto" class="img-fluid" />
+
+      <div class="col-10">
+        <img :src="MainPhoto" class="big-img" />
       </div>
-      <div class="col-12 col-md-6 col-lg-8">
-        <p>{{ product.collor }} rame</p>
-        <p class="h1">{{ product.name }}</p>
-
-        <p>{{ product.description }}</p>
-        <p>{{ product.price }} $</p>
-        <div class="row">
-          <div class="col-3" v-for="(img, i) in product.images" :key="i">
-            <img :src="img" class="img-fluid" />
+    </div>
+    <div class="row m-4" style="width: 704px">
+      <div class="mt-3 col-10">
+        <div class="gap-3">
+          <div class="d-flex flex-column gap-3 mb-4">
+            <p class="h1">{{ product.name }}</p>
+            <p class="h1">$ {{ product.price }}</p>
           </div>
-        </div>
 
-        <div class="row mt-3">
-          <div class="col-8">
-            <input
-              type="number"
-              min="0"
-              v-model="productCount"
-              class="form-control"
-            />
+          <div class="d-flex flex-column gap-3">
+            <div>
+              <p>Color:</p>
+              <span
+                v-for="(color, i) in product.available_colors"
+                :key="i"
+                class="color-circle"
+                :style="{ backgroundColor: color }"
+              >
+              </span>
+            </div>
+            <div>
+              <p>Size :</p>
+              <span
+                v-for="(size, i) in product.available_sizes"
+                :key="i"
+                class="badge bg-secondary me-2"
+              >
+                {{ size }}
+              </span>
+            </div>
+            <div class="mt-3">
+              <label class="d-block mb-1">Quantity: </label>
+              <select v-model="productCount" class="form-select w-auto">
+                <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+              </select>
+            </div>
           </div>
-          <div class="col-4">
-            <button
-              :disabled="productCount == 0"
-              class="btn btn-success"
-            ></button>
+          <div>
+            <button class="mt-4">
+              <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
+          </div>
+          <div>
+            <div>
+              <p>Details</p>
+            </div>
+            <div>
+              <p>Brand:</p>
+            </div>
+            <div>
+              <p>{{ product.description }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -50,9 +83,11 @@ const id = route.params.id;
 const product = ref(null);
 const MainPhoto = ref("");
 const img = ref("");
-const productCount = ref(0);
 const http = new HttpRequests();
 const collor = ref("");
+const productCount = ref(1);
+const size = ref("");
+const description = ref("");
 
 onMounted(async () => {
   try {
@@ -63,9 +98,59 @@ onMounted(async () => {
     MainPhoto.value = product.value.cover_image;
     img.value = product.value.images;
     collor.value = product.value.available_colors;
+    size.value = product.value.available_sizes;
+    description.value = product.value.description;
     console.log(res.data);
   } catch (error) {
     console.error("Failed to fetch product:", error);
   }
 });
 </script>
+
+<style scoped>
+body {
+  font-family: "Poppins", sans-serif;
+}
+.small-img {
+  cursor: pointer;
+  max-width: 121px;
+  height: 161px;
+  border-radius: 6px;
+}
+
+.big-img {
+  width: 703px;
+  height: 937px;
+  border-radius: 10px;
+}
+.color-circle {
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+button {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 41px;
+  background-color: #ff4000;
+  color: white;
+  padding: 16px 60px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  height: 59px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: scale(1.1);
+}
+</style>
