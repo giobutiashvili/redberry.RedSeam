@@ -16,12 +16,12 @@
 </template>
 
 <script setup>
-import HttpRequests from "../httprequests/httprequests.js";
+import httprequests from "../httprequests/httprequests.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const products = ref([]);
-const http = new HttpRequests();
+
 const router = useRouter();
 
 const goToProductDetail = (id) => {
@@ -30,7 +30,7 @@ const goToProductDetail = (id) => {
 
 onMounted(async () => {
   try {
-    const res = await http.getproducts();
+    const res = await httprequests.get("/products");
     products.value = res.data.data;
     console.log(res.data);
   } catch (error) {

@@ -11,11 +11,11 @@
           <div class="image-preview" v-if="previewImage">
             <img :src="previewImage" alt="Profile Picture" />
           </div>
-          <button type="button" @click="removeImage">Remove</button>
+          <p type="button" @click="removeImage">Remove</p>
         </div>
 
         <div class="form-group">
-          <label for="username">Username</label>
+          <label class="required" for="username">Username</label>
           <input
             id="username"
             v-model="username"
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group">
-          <label for="email">Email</label>
+          <label class="required" for="email">Email</label>
           <input
             id="email"
             v-model="email"
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label class="required" for="password">Password</label>
           <div class="password-input-wrapper">
             <input
               id="password"
@@ -48,25 +48,28 @@
             />
             <i
               :class="['fa', passwordVisible ? 'fa-eye-slash' : 'fa-eye']"
-              @click="togglePasswordVisibility"
+              @click="togglePasswordVisibility('password')"
               class="password-toggle"
             ></i>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
+          <label class="required" for="confirmPassword">Confirm Password</label>
           <div class="password-input-wrapper">
             <input
               id="confirmPassword"
               v-model="confirmPassword"
-              :type="passwordVisible ? 'text' : 'password'"
+              :type="confirmPasswordVisible ? 'text' : 'password'"
               required
               placeholder="Confirm your password"
             />
             <i
-              :class="['fa', passwordVisible ? 'fa-eye-slash' : 'fa-eye']"
-              @click="togglePasswordVisibility"
+              :class="[
+                'fa',
+                confirmPasswordVisible ? 'fa-eye-slash' : 'fa-eye',
+              ]"
+              @click="togglePasswordVisibility('confirmPassword')"
               class="password-toggle"
             ></i>
           </div>
@@ -87,6 +90,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import image from "../assets/Rec.png";
 
 const username = ref("");
@@ -94,15 +98,28 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const previewImage = ref(null);
+const passwordVisible = ref(false);
+const confirmPasswordVisible = ref(false);
+const togglePasswordVisibility = (field) => {
+  if (field === "password") {
+    passwordVisible.value = !passwordVisible.value;
+  } else if (field === "confirmPassword") {
+    confirmPasswordVisible.value = !confirmPasswordVisible.value;
+  }
+};
 
-const handleRegister = () => {
-  console.log(
-    "Registering with",
-    username.value,
-    email.value,
-    password.value,
-    confirmPassword.value
-  );
+const handleRegister = async () => {
+  try {
+    const reposnse = await httprequest.postMessage("/register", {
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      confirmPassword: confirmPassword.value,
+    });
+    console.log(reposnse);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const handleImageUpload = (event) => {
@@ -230,5 +247,27 @@ button[type="button"]:hover {
   color: #ff4000;
   cursor: pointer;
   font-weight: 600;
+}
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* საკმარისი სივრცე აიკონისთვის */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 2px;
 }
 </style>

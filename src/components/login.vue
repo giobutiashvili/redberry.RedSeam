@@ -1,17 +1,15 @@
 <template>
   <div class="login-page">
-    <!-- მარცხენა მხარეს სურათი -->
     <div class="login-image">
       <img :src="image" alt="login" />
     </div>
 
-    <!-- მარჯვენა მხარეს ფორმა -->
     <div class="login-container">
       <form @submit.prevent="handleLogin" class="login-form">
         <h2>Log in</h2>
 
         <div class="form-group">
-          <label for="email">Email</label>
+          <label class="required" for="email">Email</label>
           <input
             id="email"
             v-model="email"
@@ -22,19 +20,24 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            required
-            placeholder="Enter your password"
-          />
+          <label class="required" for="password">Password</label>
+          <div class="password-input-wrapper">
+            <input
+              id="password"
+              v-model="password"
+              :type="passwordVisible ? 'text' : 'password'"
+              required
+              placeholder="Enter your password"
+            />
+            <i
+              :class="['fa', passwordVisible ? 'fa-eye-slash' : 'fa-eye']"
+              @click="togglePasswordVisibility('password')"
+              class="password-toggle"
+            ></i>
+          </div>
         </div>
 
-        <router-link to="/">
-          <button type="submit">Log in</button>
-        </router-link>
+        <button type="submit">Log in</button>
 
         <p class="register-text">
           Not a member?
@@ -51,13 +54,32 @@
 
 <script setup>
 import { ref } from "vue";
-import image from "../assets/Rec.png"; // შენი ფოტო
+import { useRouter } from "vue-router";
+import image from "../assets/Rec.png";
+import httprequest from "../httprequests/httprequests";
 
 const email = ref("");
 const password = ref("");
+const router = useRouter();
+const passwordVisible = ref(false);
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
-const handleLogin = () => {
-  console.log("Logging in with", email.value, password.value);
+const handleLogin = async () => {
+  try {
+    const response = await httprequest.post("/login", {
+      email: email.value,
+      password: password.value,
+    });
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      router.push("/");
+    }
+    console.log("Login successful:", response.data);
+  } catch (error) {
+    console.error("Login error:", error);
+  }
 };
 </script>
 
@@ -67,7 +89,6 @@ const handleLogin = () => {
   height: 100vh;
 }
 
-/* მარცხენა მხარე */
 .login-image {
   flex: 1;
 }
@@ -77,7 +98,6 @@ const handleLogin = () => {
   object-fit: cover;
 }
 
-/* მარჯვენა მხარე */
 .login-container {
   flex: 1;
   display: flex;
@@ -133,5 +153,27 @@ button[type="submit"]:hover {
   color: #ff4000;
   cursor: pointer;
   font-weight: 600;
+}
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 2px;
 }
 </style>

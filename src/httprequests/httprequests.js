@@ -1,9 +1,7 @@
 import axios from "axios";
 
-export default class HttpRequests {
-    getproducts(){
-        return axios.get("https://api.redseam.redberryinternship.ge/api/products");
+const httprequest = axios.create({
+  baseURL: "https://api.redseam.redberryinternship.ge/api",
+});
 
-    };
-    
-}
+export default httprequest;

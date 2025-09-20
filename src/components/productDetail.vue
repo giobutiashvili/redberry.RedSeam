@@ -85,7 +85,6 @@ const id = route.params.id;
 const product = ref(null);
 const MainPhoto = ref("");
 const img = ref("");
-const http = new HttpRequests();
 const collor = ref("");
 const productCount = ref(1);
 const size = ref("");
@@ -93,7 +92,7 @@ const description = ref("");
 
 onMounted(async () => {
   try {
-    const res = await http.getproducts();
+    const res = await HttpRequests.get("/products");
     product.value = res.data.data.find(
       (p) => p.id == parseInt(route.params.id)
     );
