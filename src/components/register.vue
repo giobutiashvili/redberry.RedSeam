@@ -4,7 +4,7 @@
       <img :src="image" alt="register" />
     </div>
     <div class="register-container">
-      <form @submit.prevent="handleRegister" class="register-form">
+      <form @submit.prevent="submitForm" class="register-form">
         <h2>Registration</h2>
         <div class="image-upload">
           <input type="file" @change="handleImageUpload" />
@@ -92,7 +92,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import image from "../assets/Rec.png";
+import httprequest from "../httprequests/httprequests";
 
+const router = useRouter();
 const username = ref("");
 const email = ref("");
 const password = ref("");
@@ -108,17 +110,22 @@ const togglePasswordVisibility = (field) => {
   }
 };
 
-const handleRegister = async () => {
+const submitForm = async () => {
+  const formData = new FormData();
+  formData.append("username", String(username.value));
+  formData.append("email", String(email.value));
+  formData.append("password", String(password.value));
+  formData.append("password_confirmation", String(confirmPassword.value));
+  if (previewImage.value) {
+    formData.append("avatar", previewImage.value);
+  }
+
   try {
-    const reposnse = await httprequest.postMessage("/register", {
-      username: username.value,
-      email: email.value,
-      password: password.value,
-      confirmPassword: confirmPassword.value,
-    });
-    console.log(reposnse);
+    const response = await httprequest.post("/register", formData);
+    console.log(response);
+    router.push("/login");
   } catch (error) {
-    console.log(error);
+    console.log(error.response?.data || error.message);
   }
 };
 

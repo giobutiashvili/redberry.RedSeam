@@ -5,7 +5,7 @@
     </div>
 
     <div class="login-container">
-      <form @submit.prevent="handleLogin" class="login-form">
+      <form @submit.prevent="submitForm" class="login-form">
         <h2>Log in</h2>
 
         <div class="form-group">
@@ -66,12 +66,13 @@ const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-const handleLogin = async () => {
+const submitForm = async () => {
+  const formData = new FormData();
+  formData.append("email", email.value);
+  formData.append("password", password.value);
+
   try {
-    const response = await httprequest.post("/login", {
-      email: email.value,
-      password: password.value,
-    });
+    const response = await httprequest.post("/login", formData);
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       router.push("/");
