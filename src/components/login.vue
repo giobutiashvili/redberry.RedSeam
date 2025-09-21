@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page">
+  <div class="login-page mt-3">
     <div class="login-image">
       <img :src="image" alt="login" />
     </div>

@@ -77,7 +77,7 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import HttpRequests from "../httprequests/httprequests.js";
 
 const route = useRoute();
@@ -90,22 +90,33 @@ const productCount = ref(1);
 const size = ref("");
 const description = ref("");
 
-onMounted(async () => {
+const fetchProduct = async (id) => {
   try {
-    const res = await HttpRequests.get("/products");
-    product.value = res.data.data.find(
-      (p) => p.id == parseInt(route.params.id)
-    );
+    const res = await HttpRequests.get(`/products/${id}`);
+    product.value = res.data; // აქ უკვე მოდის ერთი პროდუქტი, არა ლისტი
+
     MainPhoto.value = product.value.cover_image;
     img.value = product.value.images;
     collor.value = product.value.available_colors;
     size.value = product.value.available_sizes;
     description.value = product.value.description;
-    console.log(res.data);
-  } catch (error) {
-    console.error("Failed to fetch product:", error);
+
+    console.log("Fetched product:", product.value);
+  } catch (err) {
+    console.error("Failed to fetch product:", err);
   }
+};
+
+onMounted(() => {
+  fetchProduct(route.params.id);
 });
+
+watch(
+  () => route.params.id,
+  (newid) => {
+    fetchProduct(newid);
+  }
+);
 </script>
 
 <style scoped>
@@ -117,6 +128,7 @@ body {
   max-width: 121px;
   height: 161px;
   border-radius: 6px;
+  object-fit: cover;
 }
 
 .big-img {

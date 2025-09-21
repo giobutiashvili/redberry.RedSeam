@@ -1,5 +1,5 @@
 <template>
-  <div class="register-page">
+  <div class="register-page mt-3">
     <div class="register-image">
       <img :src="image" alt="register" />
     </div>
@@ -7,11 +7,24 @@
       <form @submit.prevent="submitForm" class="register-form">
         <h2>Registration</h2>
         <div class="image-upload">
-          <input type="file" @change="handleImageUpload" />
+          <input
+            id="fileInput"
+            type="file"
+            @change="handleImageUpload"
+            style="display: none"
+          />
           <div class="image-preview" v-if="previewImage">
             <img :src="previewImage" alt="Profile Picture" />
           </div>
-          <p type="button" @click="removeImage">Remove</p>
+          <div class="d-flex align-items-center">
+            <label style="cursor: pointer" for="fileInput" class="upload-label">
+              Upload new
+            </label>
+
+            <p style="margin-bottom: 0" type="button" @click="removeImage">
+              Remove
+            </p>
+          </div>
         </div>
 
         <div class="form-group">
@@ -208,7 +221,6 @@ button[type="submit"]:hover {
 
 .image-upload {
   display: flex;
-  flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
 }
@@ -240,6 +252,11 @@ button[type="button"] {
   cursor: pointer;
   transition: 0.3s;
 }
+.upload-label {
+  display: inline-block;
+  padding: 10px 14px;
+  cursor: pointer;
+}
 
 button[type="button"]:hover {
   background: #e63900;
@@ -261,7 +278,7 @@ button[type="button"]:hover {
 
 .password-input-wrapper input {
   width: 100%;
-  padding-right: 40px; /* საკმარისი სივრცე აიკონისთვის */
+  padding-right: 40px;
 }
 
 .password-toggle {
