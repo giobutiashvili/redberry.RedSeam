@@ -17,7 +17,7 @@
     </div>
     <div class="row m-4" style="width: 704px">
       <div class="mt-3 col-10">
-        <div class="gap-3">
+        <div class="d-flex flex-column" style="gap: 30px">
           <div class="d-flex flex-column gap-3 mb-4">
             <p class="h1">{{ product.name }}</p>
             <p class="h1">$ {{ product.price }}</p>
@@ -25,29 +25,36 @@
 
           <div class="d-flex flex-column gap-3">
             <div>
-              <p>Color:</p>
+              <p>Color: {{ selectColor }}</p>
               <span
                 v-for="(color, i) in product.available_colors"
                 :key="i"
                 class="color-circle"
                 :style="{ backgroundColor: color }"
+                @click="selectColor = color"
               >
               </span>
             </div>
             <div>
-              <p>Size :</p>
+              <p>Size: {{ selectSize }}</p>
               <span
                 v-for="(size, i) in product.available_sizes"
                 :key="i"
-                class="badge bg-secondary me-2"
+                class="badge me-2"
+                @click="selectSize = size"
               >
                 {{ size }}
               </span>
             </div>
             <div class="mt-3">
               <label class="d-block mb-1">Quantity: </label>
-              <select v-model="productCount" class="form-select w-auto">
-                <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+              <select
+                v-model="productCount"
+                class="form-select w-auto quantity"
+              >
+                <option v-for="n in 10" :key="n" :value="n">
+                  {{ n }}
+                </option>
               </select>
             </div>
           </div>
@@ -56,13 +63,21 @@
               <i class="fas fa-shopping-cart"></i> Add to Cart
             </button>
           </div>
+          <div class="divider"></div>
           <div class="mt-4 d-flex flex-column gap-3">
-            <div>
+            <div
+              class="d-flex align-items-center justify-content-between gap-3"
+            >
               <p>Details</p>
+              <img
+                style="width: 109px; height: 61px"
+                :src="brandimg"
+                alt="img"
+              />
             </div>
             <div class="d-flex flex-column gap-2">
               <div>
-                <p>Brand:</p>
+                <p>Brand: {{ brandName }}</p>
               </div>
               <div>
                 <p>{{ product.description }}</p>
@@ -81,7 +96,7 @@ import { ref, onMounted, watch } from "vue";
 import HttpRequests from "../httprequests/httprequests.js";
 
 const route = useRoute();
-const id = route.params.id;
+
 const product = ref(null);
 const MainPhoto = ref("");
 const img = ref("");
@@ -89,17 +104,22 @@ const collor = ref("");
 const productCount = ref(1);
 const size = ref("");
 const description = ref("");
+const brandName = ref("");
+const brandimg = ref("");
+const selectSize = ref("S");
+const selectColor = ref();
 
 const fetchProduct = async (id) => {
   try {
     const res = await HttpRequests.get(`/products/${id}`);
-    product.value = res.data; // აქ უკვე მოდის ერთი პროდუქტი, არა ლისტი
-
+    product.value = res.data;
     MainPhoto.value = product.value.cover_image;
     img.value = product.value.images;
     collor.value = product.value.available_colors;
     size.value = product.value.available_sizes;
     description.value = product.value.description;
+    brandName.value = product.value.brand.name;
+    brandimg.value = product.value.brand.image;
 
     console.log("Fetched product:", product.value);
   } catch (err) {
@@ -142,7 +162,7 @@ body {
   height: 38px;
   border-radius: 50%;
   margin-left: 5px;
-  border: 1px solid #ccc;
+
   cursor: pointer;
 }
 button {
@@ -162,5 +182,29 @@ button {
 }
 button:hover {
   opacity: 0.8;
+}
+.divider {
+  height: 0;
+  border: 1px solid #e1dfe1;
+  margin: 20px 0;
+  opacity: 1;
+}
+
+.badge {
+  background-color: #f4f4f4;
+  color: #212b36;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 100%;
+  cursor: pointer;
+  border: 1px solid #e1dfe1;
+}
+.quantity {
+  cursor: pointer;
+  background-color: #f4f4f4;
+  border: 1px solid #e1dfe1;
+  border-radius: 10px;
 }
 </style>

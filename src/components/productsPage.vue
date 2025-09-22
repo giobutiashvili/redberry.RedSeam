@@ -1,7 +1,7 @@
 <template>
   <div class="products-grid">
     <div
-      class=""
+      class="product-item d-flex flex-column"
       v-for="product in products"
       :key="product.id"
       @click="goToProductDetail(product.id)"
@@ -13,8 +13,12 @@
           alt="image"
         />
       </div>
-      <p>{{ product.name }}</p>
-      <p>{{ product.price }}$</p>
+      <div class="d-flex flex-column" style="gap: 2px">
+        <p style="font-size: 18px !important">
+          {{ product.name }}
+        </p>
+        <p style="font-size: 16px !important">{{ product.price }}$</p>
+      </div>
     </div>
   </div>
 
@@ -66,7 +70,6 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 
 const products = ref([]);
-const productLinks = ref([]);
 const router = useRouter();
 const currentPage = ref(1);
 const lastPage = ref(11);
@@ -111,6 +114,9 @@ onMounted(async () => fetchProducts());
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: auto;
+  gap: 24px;
+}
+.product-item {
   gap: 24px;
 }
 .imgclass img {
