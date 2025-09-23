@@ -1,7 +1,3 @@
-<script setup>
-import NavBar from "./components/navBar.vue";
-</script>
-
 <template>
   <NavBar />
   <div class="mt-5">
@@ -9,4 +5,10 @@ import NavBar from "./components/navBar.vue";
   </div>
 </template>
 
-<style scoped></style>
+<script setup>
+import NavBar from "./components/navBar.vue";
+import { reactive, provide } from "vue";
+
+const cart = reactive([]);
+provide("cart", cart);
+</script>

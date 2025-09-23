@@ -59,7 +59,7 @@
             </div>
           </div>
           <div>
-            <button class="mt-4">
+            <button class="mt-4" @click="addToCard">
               <i class="fas fa-shopping-cart"></i> Add to Cart
             </button>
           </div>
@@ -94,9 +94,9 @@
 import { useRoute } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 import HttpRequests from "../httprequests/httprequests.js";
+import { inject } from "vue";
 
 const route = useRoute();
-
 const product = ref(null);
 const MainPhoto = ref("");
 const img = ref("");
@@ -137,6 +137,24 @@ watch(
     fetchProduct(newid);
   }
 );
+
+const cart = inject("cart");
+const addToCard = () => {
+  if (!selectColor.value || !selectSize.value) {
+    alert("გთხოვთ აირჩიოთ ფერი და ზომა");
+    return;
+  }
+  cart.push({
+    id: product.value.id,
+    name: product.value.name,
+    price: product.value.price,
+    color: selectColor.value,
+    size: selectSize.value,
+    quantity: productCount.value,
+    image: MainPhoto.value,
+  });
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
 </script>
 
 <style scoped>

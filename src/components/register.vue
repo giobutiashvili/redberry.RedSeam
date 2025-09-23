@@ -142,7 +142,7 @@ const submitForm = async () => {
     console.log(error.response?.data || error.message);
   }
 };
-
+// suratis atvirtva
 const handleImageUpload = (event) => {
   const uploadedFile = event.target.files[0];
   const maxSize = 600 * 1024;
