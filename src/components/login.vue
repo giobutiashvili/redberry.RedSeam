@@ -75,6 +75,10 @@ const submitForm = async () => {
     const response = await httprequest.post("/login", formData);
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      window.dispatchEvent(
+        new CustomEvent("user-logged-in", { detail: response.data.user })
+      );
       router.push("/");
     }
     console.log("Login successful:", response.data);

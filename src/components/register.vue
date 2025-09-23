@@ -113,6 +113,7 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const previewImage = ref(null);
+const file = ref(null);
 const passwordVisible = ref(false);
 const confirmPasswordVisible = ref(false);
 const togglePasswordVisibility = (field) => {
@@ -129,8 +130,8 @@ const submitForm = async () => {
   formData.append("email", String(email.value));
   formData.append("password", String(password.value));
   formData.append("password_confirmation", String(confirmPassword.value));
-  if (previewImage.value) {
-    formData.append("avatar", previewImage.value);
+  if (file.value) {
+    formData.append("avatar", file.value);
   }
 
   try {
@@ -143,13 +144,16 @@ const submitForm = async () => {
 };
 
 const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewImage.value = reader.result;
-    };
-    reader.readAsDataURL(file);
+  const uploadedFile = event.target.files[0];
+  const maxSize = 600 * 1024;
+  if (uploadedFile) {
+    if (uploadedFile.size > maxSize) {
+      alert("ფაილის ზომა უნდა იყოს მაქსიმუმ 600KB!");
+      return;
+    }
+
+    file.value = uploadedFile;
+    previewImage.value = URL.createObjectURL(uploadedFile);
   }
 };
 
