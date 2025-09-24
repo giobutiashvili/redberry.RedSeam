@@ -17,40 +17,79 @@
           class="d-flex align-items-center"
           style="gap: 8px; position: relative"
         >
-          <i
-            class="fas fa-sliders-h"
-            style="cursor: pointer"
-            @click="showSort = !showSort"
-          ></i>
-          <span style="cursor: pointer" @click="showSort = !showSort"
-            >Sort by</span
-          >
-          <div
-            v-show="showSort"
-            style="
-              position: absolute;
-              top: 100%;
-              left: 0;
-              background: #fff;
-              border: 1px solid #e1dfe1;
-              border-radius: 4px;
-              z-index: 10;
-              min-width: 160px;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            "
-          >
-            <select
-              @change="$emit('sort', $event.target.value)"
-              style="width: 100%; border: none; outline: none; padding: 8px"
+          <div @change="$emit('sort', $event.target.value)">
+            <span style="cursor: pointer" @click="showSort = !showSort"
+              >Sort by</span
             >
-              <option value="new">New products first</option>
-              <option value="price-asc">Price, low to high</option>
-              <option value="price-desc">Price, high to low</option>
-            </select>
+            <div class="show-sort" v-show="showSort">
+              <ul
+                class="d-flex flex-column gap-3"
+                style="width: 100%; border: none; outline: none; padding: 8px"
+              >
+                <li style="font-weight: 600">Sort By</li>
+
+                <li @click="handleClick('new')">New products first</li>
+                <li @click="handleClick('price-asc')">Price, low to high</li>
+                <li @click="handleClick('price-desc')">Price, high to low</li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="d-flex align-items-center" style="gap: 4px">
-          Filter<i class="fas fa-angle-down"></i>
+        <div
+          style="gap: 8px; position: relative"
+          @change="$emit('price', $event.target.value)"
+        >
+          <span style="cursor: pointer" @click="showprice = !showprice">
+            Filter<i class="fas fa-angle-down"></i>
+          </span>
+          <div class="show-price" v-show="showprice">
+            <div
+              class="d-flex flex-column gap-3"
+              style="width: 100%; border: none; outline: none; padding: 8px"
+            >
+              <label style="font-weight: 600">Select Price</label>
+              <div class="d-flex align-items-center" style="gap: 8px">
+                <input
+                  type="number"
+                  v-model="priceFrom"
+                  placeholder="From"
+                  style="
+                    width: 70px;
+                    padding: 4px 8px;
+                    border: 1px solid #e1dfe1;
+                    border-radius: 4px;
+                  "
+                  min="0"
+                />
+                <span>-</span>
+                <input
+                  type="number"
+                  v-model="priceTo"
+                  placeholder="To"
+                  style="
+                    width: 70px;
+                    padding: 4px 8px;
+                    border: 1px solid #e1dfe1;
+                    border-radius: 4px;
+                  "
+                  min="0"
+                />
+                <button
+                  @click="applyPriceFilter"
+                  style="
+                    padding: 4px 12px;
+                    background: #10151f;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                  "
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -60,6 +99,16 @@
 import { ref } from "vue";
 
 const showSort = ref(false);
+const showprice = ref(false);
+const priceFrom = ref("");
+const priceTo = ref("");
+
+const emit = defineEmits(["sort"]);
+
+function handleClick(value) {
+  emit("sort", value);
+  showSort.value = false;
+}
 </script>
 <style scoped>
 h2 {
@@ -68,5 +117,34 @@ h2 {
   font-size: 42px;
   line-height: 100%;
   color: #10151f;
+}
+li {
+  list-style: none;
+  font-size: 16px;
+  line-height: 100%;
+  font-weight: 400px;
+  color: #10151f;
+  cursor: pointer;
+}
+.show-sort,
+.show-price {
+  position: absolute;
+  width: 223px;
+  height: 184px;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #e1dfe1;
+  border-radius: 8px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  z-index: 10;
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.show-price {
+  left: -195px;
+  width: 392px;
+  height: 184px;
 }
 </style>
