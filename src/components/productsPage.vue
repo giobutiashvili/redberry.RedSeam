@@ -83,6 +83,7 @@ const fetchProducts = async (page = 1) => {
   products.value = res.data.data;
   currentPage.value = page;
   lastPage.value = res.data.meta.last_page;
+  router.push({ query: { page } });
 };
 
 const pagesWithDots = computed(() => {
@@ -106,7 +107,10 @@ const pagesWithDots = computed(() => {
   return pages.filter((p, i, arr) => arr.indexOf(p) === i); // remove duplicates
 });
 
-onMounted(async () => fetchProducts());
+onMounted(async () => {
+  const pageFromUrl = parseInt(router.currentRoute.value.query.page) || 1;
+  fetchProducts(pageFromUrl);
+});
 </script>
 
 <style scoped>

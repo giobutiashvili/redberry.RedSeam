@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex" v-if="product">
-    <div class="row m-4">
+    <div style="flex-wrap: nowrap" class="row m-4">
       <div class="col-2 d-flex flex-column gap-2">
         <img
           v-for="(img, i) in product.images"
@@ -31,16 +31,17 @@
                 :key="i"
                 class="color-circle"
                 :style="{ backgroundColor: color }"
+                :class="{ active: selectColor === color }"
                 @click="selectColor = color"
-              >
-              </span>
+              ></span>
             </div>
-            <div>
+            <div class="mt-3">
               <p>Size: {{ selectSize }}</p>
               <span
                 v-for="(size, i) in product.available_sizes"
                 :key="i"
                 class="badge me-2"
+                :class="{ active: selectSize === size }"
                 @click="selectSize = size"
               >
                 {{ size }}
@@ -180,8 +181,15 @@ body {
   height: 38px;
   border-radius: 50%;
   margin-left: 5px;
-
   cursor: pointer;
+  border: 1px solid transparent;
+  transition: border 0.2s;
+}
+
+.color-circle.active {
+  padding: 3px;
+  outline: 1px solid #e1dfe1;
+  outline-offset: 4px;
 }
 button {
   align-items: center;
@@ -218,6 +226,10 @@ button:hover {
   line-height: 100%;
   cursor: pointer;
   border: 1px solid #e1dfe1;
+}
+.badge.active {
+  background-color: #e0e0e0;
+  border: 1px solid #10151f;
 }
 .quantity {
   cursor: pointer;

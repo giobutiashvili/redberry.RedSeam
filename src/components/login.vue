@@ -79,7 +79,9 @@ const submitForm = async () => {
       window.dispatchEvent(
         new CustomEvent("user-logged-in", { detail: response.data.user })
       );
-      router.push("/");
+      router.push("/").then(() => {
+        window.location.reload();
+      });
     }
     console.log("Login successful:", response.data);
   } catch (error) {
