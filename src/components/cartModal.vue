@@ -137,7 +137,7 @@
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li class="d-flex justify-content-between">
                 <span>Items subtotal</span>
-                <span>${{ totoalPrice }}</span>
+                <span>${{ totalPrice }}</span>
               </li>
               <li class="d-flex justify-content-between">
                 <span>Delivery</span>
@@ -147,7 +147,7 @@
                 class="d-flex justify-content-between fw-bold border-top pt-2"
               >
                 <span>Total</span>
-                <span>${{ totoalPrice + 5 }}</span>
+                <span>${{ totalPrice + 5 }}</span>
               </li>
             </ul>
           </div>
@@ -172,13 +172,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import cardImage from "../assets/cardImage.png";
 import { inject } from "vue";
-const cart = inject("cart");
 
+const cart = inject("cart", ref([]));
 const show = ref(false);
-const totoalPrice = ref(0);
 function open() {
   show.value = true;
 }
@@ -193,7 +192,9 @@ onMounted(() => {
   const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.push(...savedCart);
 });
-
+const totalPrice = computed(() => {
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+});
 watch(
   cart,
   (newCart) => {

@@ -1,8 +1,9 @@
 <template>
+  <ProductFilter @sort="handleSort" />
   <div class="products-grid">
     <div
       class="product-item d-flex flex-column"
-      v-for="product in products"
+      v-for="product in filteredProducts"
       :key="product.id"
       @click="goToProductDetail(product.id)"
     >
@@ -68,11 +69,31 @@ import httprequests from "../httprequests/httprequests.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
+import ProductFilter from "./productFilter.vue";
 
+const sortOption = ref("new");
 const products = ref([]);
 const router = useRouter();
 const currentPage = ref(1);
 const lastPage = ref(11);
+const handleSort = async (option) => {
+  sortOption.value = option;
+  await router.push({ query: { page: currentPage.value, sort: option } });
+};
+
+const filteredProducts = computed(() => {
+  let result = [...products.value];
+
+  if (sortOption.value === "new") {
+    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } else if (sortOption.value === "price-asc") {
+    result.sort((a, b) => a.price - b.price);
+  } else if (sortOption.value === "price-desc") {
+    result.sort((a, b) => b.price - a.price);
+  }
+
+  return result;
+});
 
 const goToProductDetail = (id) => {
   router.push(`/product/${id}`);
@@ -83,7 +104,7 @@ const fetchProducts = async (page = 1) => {
   products.value = res.data.data;
   currentPage.value = page;
   lastPage.value = res.data.meta.last_page;
-  router.push({ query: { page } });
+  await router.push({ query: { page } });
 };
 
 const pagesWithDots = computed(() => {
@@ -109,7 +130,9 @@ const pagesWithDots = computed(() => {
 
 onMounted(async () => {
   const pageFromUrl = parseInt(router.currentRoute.value.query.page) || 1;
-  fetchProducts(pageFromUrl);
+  const sortFromUrl = router.currentRoute.value.query.sort || "new";
+  sortOption.value = sortFromUrl;
+  await fetchProducts(pageFromUrl);
 });
 </script>
 
