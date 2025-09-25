@@ -48,46 +48,22 @@
               style="width: 100%; border: none; outline: none; padding: 8px"
             >
               <label style="font-weight: 600">Select Price</label>
-              <div class="d-flex align-items-center" style="gap: 8px">
+              <div class="d-flex align-items-center" style="gap: 10px">
                 <input
                   type="number"
                   v-model="priceFrom"
-                  placeholder="From"
-                  style="
-                    width: 70px;
-                    padding: 4px 8px;
-                    border: 1px solid #e1dfe1;
-                    border-radius: 4px;
-                  "
+                  placeholder="From *"
                   min="0"
                 />
-                <span>-</span>
+
                 <input
                   type="number"
                   v-model="priceTo"
-                  placeholder="To"
-                  style="
-                    width: 70px;
-                    padding: 4px 8px;
-                    border: 1px solid #e1dfe1;
-                    border-radius: 4px;
-                  "
+                  placeholder="To *"
                   min="0"
                 />
-                <button
-                  @click="applyPriceFilter"
-                  style="
-                    padding: 4px 12px;
-                    background: #10151f;
-                    color: #fff;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                  "
-                >
-                  Apply
-                </button>
               </div>
+              <button type="submit" @click="fillterToPrice">Apply</button>
             </div>
           </div>
         </div>
@@ -103,12 +79,17 @@ const showprice = ref(false);
 const priceFrom = ref("");
 const priceTo = ref("");
 
-const emit = defineEmits(["sort"]);
+const emit = defineEmits(["sort", "price"]);
 
 function handleClick(value) {
   emit("sort", value);
   showSort.value = false;
 }
+
+const fillterToPrice = () => {
+  emit("price", { from: priceFrom.value, to: priceTo.value });
+  showprice.value = ref(false);
+};
 </script>
 <style scoped>
 h2 {
@@ -129,10 +110,7 @@ li {
 .show-sort,
 .show-price {
   position: absolute;
-  width: 223px;
-  height: 184px;
-  top: 100%;
-  left: 0;
+  left: -34px;
   background: #fff;
   border: 1px solid #e1dfe1;
   border-radius: 8px;
@@ -143,8 +121,33 @@ li {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .show-price {
-  left: -195px;
-  width: 392px;
-  height: 184px;
+  left: -265px;
+}
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 2px;
+}
+button {
+  align-self: end;
+  width: 124px;
+  height: 41px;
+  background: #ff4000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+input {
+  margin: 0;
+  font-family: poponis;
+  font-size: 14px;
+  line-height: 100%;
+  font-weight: 400;
+  padding: 4px 8px;
+  border: 1px solid rgb(225, 223, 225);
+  border-radius: 8px;
 }
 </style>

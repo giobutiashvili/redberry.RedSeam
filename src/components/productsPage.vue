@@ -1,5 +1,5 @@
 <template>
-  <ProductFilter @sort="handleSort" />
+  <ProductFilter @sort="handleSort" @price="handlePrice" />
   <div class="products-grid">
     <div
       class="product-item d-flex flex-column"
@@ -76,14 +76,26 @@ const products = ref([]);
 const router = useRouter();
 const currentPage = ref(1);
 const lastPage = ref(11);
+const priceFilter = ref({ from: null, to: null });
 const handleSort = async (option) => {
   sortOption.value = option;
-  await router.push({ query: { page: currentPage.value, sort: option } });
+  await router.push({
+    query: {
+      page: currentPage.value,
+      sort: option,
+      from: priceFilter.value.from,
+      to: priceFilter.value.to,
+    },
+  });
 };
-
 const filteredProducts = computed(() => {
   let result = [...products.value];
-
+  if (priceFilter.value.from !== null && priceFilter.value.to !== null) {
+    result = result.filter(
+      (p) =>
+        p.price >= priceFilter.value.from && p.price <= priceFilter.value.to
+    );
+  }
   if (sortOption.value === "new") {
     result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   } else if (sortOption.value === "price-asc") {
@@ -91,9 +103,20 @@ const filteredProducts = computed(() => {
   } else if (sortOption.value === "price-desc") {
     result.sort((a, b) => b.price - a.price);
   }
-
   return result;
 });
+
+const handlePrice = async (range) => {
+  priceFilter.value = range;
+  await router.push({
+    query: {
+      page: currentPage.value,
+      sort: sortOption.value,
+      from: range.from,
+      to: range.to,
+    },
+  });
+};
 
 const goToProductDetail = (id) => {
   router.push(`/product/${id}`);
@@ -114,18 +137,18 @@ const pagesWithDots = computed(() => {
     return pages;
   }
 
-  if (currentPage.value > 2) pages.push(1); // first page
-  if (currentPage.value > 3) pages.push("..."); // left dots
+  if (currentPage.value > 2) pages.push(1);
+  if (currentPage.value > 3) pages.push("...");
 
   if (currentPage.value > 1 && currentPage.value < lastPage.value)
     pages.push(currentPage.value - 1);
   pages.push(currentPage.value);
   if (currentPage.value < lastPage.value) pages.push(currentPage.value + 1);
 
-  if (currentPage.value < lastPage.value - 2) pages.push("..."); // right dots
-  if (currentPage.value < lastPage.value - 1) pages.push(lastPage.value); // last page
+  if (currentPage.value < lastPage.value - 2) pages.push("...");
+  if (currentPage.value < lastPage.value - 1) pages.push(lastPage.value);
 
-  return pages.filter((p, i, arr) => arr.indexOf(p) === i); // remove duplicates
+  return pages.filter((p, i, arr) => arr.indexOf(p) === i);
 });
 
 onMounted(async () => {

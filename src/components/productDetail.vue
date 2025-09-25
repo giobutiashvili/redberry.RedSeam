@@ -10,7 +10,6 @@
           @click="MainPhoto = img"
         />
       </div>
-
       <div class="col-10">
         <img :src="MainPhoto" class="big-img" />
       </div>
@@ -22,7 +21,6 @@
             <p class="h1">{{ product.name }}</p>
             <p class="h1">$ {{ product.price }}</p>
           </div>
-
           <div class="d-flex flex-column gap-3">
             <div>
               <p>Color: {{ selectColor }}</p>
@@ -141,8 +139,8 @@ watch(
 
 const cart = inject("cart");
 const addToCard = () => {
-  if (!selectColor.value || !selectSize.value) {
-    alert("გთხოვთ აირჩიოთ ფერი და ზომა");
+  if (selectColor.value) {
+    alert("გთხოვთ აირჩიოთ ფერი");
     return;
   }
   cart.push({
