@@ -11,7 +11,7 @@
             class="close-btn"
             @click="close"
           >
-            X
+            <i class="fa-solid fa-xmark"></i>
           </h3>
         </div>
         <div
@@ -109,6 +109,7 @@
                             : {}
                         "
                         class="btn btn-sm"
+                        style="border: none !important"
                         @click="
                           item.quantity > 1 &&
                             updateQuantity(item, item.quantity - 1)
@@ -119,6 +120,7 @@
                       <span>{{ item.quantity }}</span>
                       <button
                         class="btn btn-sm"
+                        style="border: none !important"
                         @click="updateQuantity(item, item.quantity + 1)"
                       >
                         +
@@ -133,7 +135,7 @@
               </div>
             </div>
           </div>
-          <div>
+          <div style="margin-top: 0px">
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li class="d-flex justify-content-between">
                 <span>Items subtotal</span>
@@ -172,7 +174,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import cardImage from "../assets/cardImage.png";
 import { inject } from "vue";
 
@@ -186,12 +188,8 @@ function close() {
 }
 const updateQuantity = (item, quantity) => {
   item.quantity = quantity;
-  localStorage.setItem("cart", JSON.stringify(cart));
 };
-onMounted(() => {
-  const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(...savedCart);
-});
+
 const totalPrice = computed(() => {
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 });
@@ -204,7 +202,6 @@ watch(
 );
 const removeCard = (index) => {
   cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
 defineExpose({ open, close });

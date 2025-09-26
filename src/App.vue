@@ -10,6 +10,7 @@
 import NavBar from "./components/navBar.vue";
 import { reactive, provide } from "vue";
 
-const cart = reactive([]);
+const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+const cart = reactive(savedCart);
 provide("cart", cart);
 </script>

@@ -17,7 +17,7 @@
           class="d-flex align-items-center"
           style="gap: 8px; position: relative"
         >
-          <div @change="$emit('sort', $event.target.value)">
+          <div>
             <span style="cursor: pointer" @click="showSort = !showSort"
               >Sort by</span
             >
@@ -35,10 +35,7 @@
             </div>
           </div>
         </div>
-        <div
-          style="gap: 8px; position: relative"
-          @change="$emit('price', $event.target.value)"
-        >
+        <div style="gap: 8px; position: relative">
           <span style="cursor: pointer" @click="showprice = !showprice">
             Filter<i class="fas fa-angle-down"></i>
           </span>
@@ -57,6 +54,7 @@
                 />
 
                 <input
+                  @change="$emit('price', $event.target.value)"
                   type="number"
                   v-model="priceTo"
                   placeholder="To *"
