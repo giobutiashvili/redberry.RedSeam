@@ -18,7 +18,7 @@
         style="cursor: pointer"
       >
         <div class="loginImage">
-          <img :src="loginImage" alt="" />
+          <img :src="loginImage" alt="" style="width: 24px" />
         </div>
         <div class="login">
           <span>Log in</span>
@@ -28,18 +28,30 @@
       <div
         v-else
         class="d-flex align-items-center"
-        style="gap: 20px; width: 108px; height: 40px; cursor: pointer"
+        style="gap: 20px; cursor: pointer"
       >
-        <span @click="cartModal()"> 🛒 </span>
+        <span @click="cartModal()" style="font-size: 24px"> 🛒 </span>
         <CartModal ref="cartModalRef" />
-        <img
-          :src="avatar"
-          alt="avatar"
-          class="rounded-circle"
-          width="40"
-          height="40"
-        />
-        <button @click="logout" class="btn btn-sm btn-danger">Logout</button>
+        <div>
+          <img
+            :src="avatar"
+            alt="avatar"
+            class="rounded-circle"
+            width="40px"
+            height="40px"
+          />
+          <button class="showlogout" @click="showlogOut = !showlogOut">
+            <i class="fa fa-angle-down"></i>
+          </button>
+        </div>
+
+        <button
+          v-if="showlogOut"
+          @click="logout"
+          class="btn btn-sm btn-danger showlogoutin"
+        >
+          Logout
+        </button>
       </div>
     </div>
   </div>
@@ -54,6 +66,7 @@ import CartModal from "./cartModal.vue";
 const image = ref(HandEye);
 const loginImage = ref(Image);
 const avatar = ref(null);
+const showlogOut = ref(false);
 
 const isAuthenticated = computed(() => !!localStorage.getItem("token"));
 
@@ -63,8 +76,6 @@ onMounted(() => {
     const user = JSON.parse(userData);
     avatar.value = user.avatar || loginImage.value;
   }
-
-  // Custom Event
   window.addEventListener("user-logged-in", (e) => {
     avatar.value = e.detail.avatar || loginImage.value;
   });
@@ -92,5 +103,16 @@ function cartModal() {
 }
 .login {
   gap: 8px;
+}
+.showlogout {
+  border: none !important;
+  position: relative;
+  background-color: #f8f6f7;
+}
+.showlogoutin {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
 }
 </style>

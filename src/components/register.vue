@@ -61,7 +61,7 @@
             />
             <i
               :class="['fa', passwordVisible ? 'fa-eye-slash' : 'fa-eye']"
-              @click="togglePasswordVisibility('password')"
+              @click="passwordshow('password')"
               class="password-toggle"
             ></i>
           </div>
@@ -82,7 +82,7 @@
                 'fa',
                 confirmPasswordVisible ? 'fa-eye-slash' : 'fa-eye',
               ]"
-              @click="togglePasswordVisibility('confirmPassword')"
+              @click="passwordshow('confirmPassword')"
               class="password-toggle"
             ></i>
           </div>
@@ -116,14 +116,16 @@ const previewImage = ref(null);
 const file = ref(null);
 const passwordVisible = ref(false);
 const confirmPasswordVisible = ref(false);
-const togglePasswordVisibility = (field) => {
+
+// პაროლის გამოჩენა დამალვა
+const passwordshow = (field) => {
   if (field === "password") {
     passwordVisible.value = !passwordVisible.value;
   } else if (field === "confirmPassword") {
     confirmPasswordVisible.value = !confirmPasswordVisible.value;
   }
 };
-
+// pormis gagzavna
 const submitForm = async () => {
   const formData = new FormData();
   formData.append("username", String(username.value));
