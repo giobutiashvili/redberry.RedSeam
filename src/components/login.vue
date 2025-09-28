@@ -61,6 +61,7 @@ import httprequest from "../httprequests/httprequests";
 const email = ref("");
 const password = ref("");
 const router = useRouter();
+// პაროლი რო გამოჩნდეს
 const passwordVisible = ref(false);
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
@@ -76,9 +77,11 @@ const submitForm = async () => {
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
+      // user-loginის მერე რო რამე ცვლილებ მოხდეს ეს უზრუნველყოფს
       window.dispatchEvent(
         new CustomEvent("user-logged-in", { detail: response.data.user })
       );
+      // გვერდის რეფრეში აუცილებელია რადგან და-login-ებული user-ის ავატარი გამოჩნდეს მთავარ გვერძე
       router.push("/").then(() => {
         window.location.reload();
       });

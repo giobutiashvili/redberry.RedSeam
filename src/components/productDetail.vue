@@ -108,6 +108,7 @@ const brandimg = ref("");
 const selectSize = ref("S");
 const selectColor = ref();
 
+//პროდუქტის მონაცემების წამოღება
 const fetchProduct = async (id) => {
   try {
     const res = await HttpRequests.get(`/products/${id}`);
@@ -120,9 +121,9 @@ const fetchProduct = async (id) => {
     brandName.value = product.value.brand.name;
     brandimg.value = product.value.brand.image;
 
-    console.log("Fetched product:", product.value);
+    console.log("~ product:", product.value);
   } catch (err) {
-    console.error("Failed to fetch product:", err);
+    console.error("Failed~:", err);
   }
 };
 
@@ -138,6 +139,7 @@ watch(
 );
 
 const cart = inject("cart");
+// კალათაში დამატება
 const addToCard = () => {
   if (selectColor.value) {
     alert("გთხოვთ აირჩიოთ ფერი");

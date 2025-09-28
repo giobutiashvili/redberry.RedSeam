@@ -32,7 +32,7 @@
       >
         <span @click="cartModal()" style="font-size: 24px"> 🛒 </span>
         <CartModal ref="cartModalRef" />
-        <div>
+        <div @click="showlogOut = !showlogOut">
           <img
             :src="avatar"
             alt="avatar"
@@ -40,7 +40,7 @@
             width="40px"
             height="40px"
           />
-          <button class="showlogout" @click="showlogOut = !showlogOut">
+          <button class="showlogout">
             <i class="fa fa-angle-down"></i>
           </button>
         </div>
@@ -68,6 +68,7 @@ const loginImage = ref(Image);
 const avatar = ref(null);
 const showlogOut = ref(false);
 
+// თუ არა დალოგინებული შეამოწმე
 const isAuthenticated = computed(() => !!localStorage.getItem("token"));
 
 onMounted(() => {
@@ -76,18 +77,15 @@ onMounted(() => {
     const user = JSON.parse(userData);
     avatar.value = user.avatar || loginImage.value;
   }
-  window.addEventListener("user-logged-in", (e) => {
-    avatar.value = e.detail.avatar || loginImage.value;
-  });
 });
-
+// უსერის ლოგაუთი
 function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   avatar.value = null;
   location.reload();
 }
-
+// მოდალის გახნსა
 const cartModalRef = ref(null);
 function cartModal() {
   if (cartModalRef.value) {

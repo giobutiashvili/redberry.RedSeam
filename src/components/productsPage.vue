@@ -77,17 +77,8 @@ const router = useRouter();
 const currentPage = ref(1);
 const lastPage = ref(11);
 const priceFilter = ref({ from: null, to: null });
-const handleSort = async (option) => {
-  sortOption.value = option;
-  await router.push({
-    query: {
-      page: currentPage.value,
-      sort: option,
-      from: priceFilter.value.from,
-      to: priceFilter.value.to,
-    },
-  });
-};
+
+// დალაგება სხვადასხვა სახის მიხედვით
 const filteredProducts = computed(() => {
   let result = [...products.value];
   if (priceFilter.value.from !== null && priceFilter.value.to !== null) {
@@ -106,6 +97,18 @@ const filteredProducts = computed(() => {
   return result;
 });
 
+const handleSort = async (option) => {
+  sortOption.value = option;
+  await router.push({
+    query: {
+      page: currentPage.value,
+      sort: option,
+      from: priceFilter.value.from,
+      to: priceFilter.value.to,
+    },
+  });
+};
+// პილტრი ფასის მიხედვით
 const handlePrice = async (range) => {
   priceFilter.value = range;
   await router.push({
@@ -129,7 +132,7 @@ const fetchProducts = async (page = 1) => {
   lastPage.value = res.data.meta.last_page;
   await router.push({ query: { page } });
 };
-
+// გვერდების პაგინაცია
 const pagesWithDots = computed(() => {
   const pages = [];
   if (lastPage.value <= 5) {

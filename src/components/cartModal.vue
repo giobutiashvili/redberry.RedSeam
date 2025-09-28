@@ -177,10 +177,11 @@ function close() {
 const updateQuantity = (item, quantity) => {
   item.quantity = quantity;
 };
-
+// ფასის კალკულაცია
 const totalPrice = computed(() => {
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 });
+
 watch(
   cart,
   (newCart) => {
@@ -188,6 +189,8 @@ watch(
   },
   { deep: true }
 );
+
+// პროდუქტის რაოდენობის შემცირება
 const removeCard = (index) => {
   cart.splice(index, 1);
 };
